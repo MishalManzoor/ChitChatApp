@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Chit Chat</string>
+    <string name="setting">Setting</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="todo">TODO</string>
+    <string name="group_chat">Group Chat</string>
+    <string name="logout">Logout</string>
+    <string name="verified">To verify your email, \nplease go to Gmail \nand click on the link</string>
+    <string name="sign_in_email">email</string>
+    <string name="sign_in_password">password</string>
+    <string name="create_account_sign_up">Create Account? Sign UP</string>
+    <string name="sign_in">Sign in</string>
+    <string name="google">Google</string>
+    <string name="image1">image1</string>
+    <string name="sign_up_password">password</string>
+    <string name="already_have_account_sign_in">Already Have Account? Sign in</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="username">username</string>
+    <string name="sign_up_email">email</string>
+    <string name="image2">image2</string>
+    <string name="back_btn">back_btn</string>
+    <string name="add_btn">add_btn</string>
+    <string name="user_name">User Name:</string>
+    <string name="about">About:</string>
+    <string name="save">Save</string>
+    <string name="about_us1">About us</string>
+    <string name="privacy_policy1">Privacy Policy</string>
+    <string name="invite_a_friend1">Invite a Friend</string>
+    <string name="notification1">Notification</string>
+    <string name="help1">Help</string>
+    <string name="write_down_here">Write down here</string>
+    <string name="message">Tap to Chat</string>
+    <string name="send1">TODO</string>
+    <string name="write_down_here1">Write down here</string>
+    <string name="send">send</string>
+    <string name="back">back</string>
+    <string name="rahul">rahul</string>
+    <string name="back1">back1</string>
+    <string name="verify_you_email">Verify you Email</string>
+    <string name="login2">Login</string>
+</resources>

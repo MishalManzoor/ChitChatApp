@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/w1"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:contentDescription="@string/image1"
+            app:srcCompat="@drawable/ic_whatsapp" />
+
+        <EditText
+            android:id="@+id/userEmailLogIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="false"
+            android:ems="10"
+            android:hint="@string/sign_in_email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:padding="9dp"
+            android:textColor="@color/lightGrey"
+            android:textColorHighlight="@color/chatbackground" />
+
+        <EditText
+            android:id="@+id/userPasswordLognIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="false"
+            android:ems="10"
+            android:hint="@string/sign_in_password"
+            android:inputType="textPassword"
+            android:minHeight="48dp"
+            android:padding="9dp"
+            android:textColor="@color/lightGrey"
+            android:textColorHighlight="@color/chatbackground" />
+
+        <TextView
+            android:id="@+id/CreateAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:padding="5dp"
+            android:text="@string/create_account_sign_up"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            tools:ignore="RtlHardcoded" />
+
+        <Button
+            android:id="@+id/userSignIn"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:padding="15dp"
+            android:text="@string/sign_in"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/design_default_color_secondary_variant"
+            app:cornerRadius="8dp" />
+
+        <Button
+            android:id="@+id/userGoogle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/white"
+            android:drawableStart="@drawable/ic_google"
+            android:padding="15dp"
+            android:text="@string/google"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+</LinearLayout>
