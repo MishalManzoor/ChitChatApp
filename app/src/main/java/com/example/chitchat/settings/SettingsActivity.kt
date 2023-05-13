@@ -11,6 +11,7 @@ import com.example.chitchat.MainActivity
 import com.example.chitchat.R
 import com.example.chitchat.databinding.ActivitySettingsBinding
 import com.example.chitchat.models.Users
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -79,7 +80,7 @@ class SettingsActivity : AppCompatActivity() {
                     // get Image
                     // set Image
                     if (users!!.profilePic.isEmpty()) {
-                        binding.profilePic1 .setImageResource(R.drawable.avatar3)
+                        binding.profilePic1.setImageResource(R.drawable.avatar3)
                     } else {
                         Picasso.get().load(users.profilePic)
                             .placeholder(R.drawable.avatar3).into(binding.profilePic1)

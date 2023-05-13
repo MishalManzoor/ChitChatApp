@@ -41,7 +41,7 @@ class GroupChatActivity : AppCompatActivity() {
         mauth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
 
-        adapter = ChatAdapter(this, list, "")
+        adapter = ChatAdapter(this, list)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 

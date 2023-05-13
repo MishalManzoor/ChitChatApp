@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chitchat.adapter.UserAdapter
 import com.example.chitchat.createAccount.SignInActivity
@@ -98,5 +99,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @Deprecated("Deprecated in Java",
+        ReplaceWith("super.onBackPressed()", "androidx.appcompat.app.AppCompatActivity")
+    )
+    override fun onBackPressed() {
+
+        val dialogBuilder = AlertDialog.Builder(this@MainActivity)
+
+        dialogBuilder.setTitle("Exist")
+            .setMessage("Are you sure you want to exist this App?")
+            // positive button text and action
+            .setPositiveButton("Exist") { _, _ ->
+                finishAffinity()
+            }
+            // negative button text and action
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+
+        // create dialog box
+        val alert = dialogBuilder.create()
+        // show alert dialog
+        alert.show()
     }
 }

@@ -8,5 +8,4 @@ data class Users (
     var id : String = "",
     var lastMessage : String = "",
     var status : String = "",
-    var connect : String = "",
         )

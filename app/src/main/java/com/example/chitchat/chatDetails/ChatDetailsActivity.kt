@@ -40,7 +40,7 @@ class ChatDetailsActivity : AppCompatActivity() {
 
         list = ArrayList()
 
-        adapter = ChatAdapter(this, list, "")
+        adapter = ChatAdapter(this, list)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -87,7 +87,8 @@ class ChatDetailsActivity : AppCompatActivity() {
                 firebaseDatabase.reference.child("Chats")
                     .child(senderRoom)
                     .child("message")
-                    .child(randomKey!!)
+                    // .child(randomKey)
+                    .push()
                     .setValue(message)
                     .addOnSuccessListener {
 
@@ -95,7 +96,8 @@ class ChatDetailsActivity : AppCompatActivity() {
                         firebaseDatabase.reference.child("Chats")
                             .child(receiverRoom)
                             .child("message")
-                            .child(randomKey)
+                           // .child(randomKey)
+                            .push()
                             .setValue(message)
                             .addOnSuccessListener {
                                 binding.message.text = null
