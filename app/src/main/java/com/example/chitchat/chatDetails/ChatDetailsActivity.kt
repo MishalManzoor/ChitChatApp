@@ -38,9 +38,14 @@ class ChatDetailsActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
 
+        // sender id
+        val senderId = FirebaseAuth.getInstance().uid.toString()
+        // receiver id
+        val receiverId = intent.getStringExtra("id")!!
+
         list = ArrayList()
 
-        adapter = ChatAdapter(this, list)
+        adapter = ChatAdapter(this, list , " ")
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -52,18 +57,12 @@ class ChatDetailsActivity : AppCompatActivity() {
 
         // set Image
         if (profilePic.isEmpty()) {
-//            Glide.with(this).load(R.drawable.avatar3).into(binding.pic)
             binding.pic.setImageResource(R.drawable.avatar3)
         } else {
-            //Glide.with(this).load(pic).into(binding.pic)
             Picasso.get().load(profilePic)
                 .placeholder(R.drawable.avatar3).into(binding.pic)
         }
 
-        // sender id
-        val senderId = FirebaseAuth.getInstance().uid.toString()
-        // receiver id
-        val receiverId = intent.getStringExtra("id")!!
         // create rooms
         val senderRoom = senderId + receiverId
         val receiverRoom = receiverId + senderId
@@ -79,9 +78,6 @@ class ChatDetailsActivity : AppCompatActivity() {
                 val message = Message(
                     binding.message.text.toString(), senderId, Date().time
                 )
-
-                // this random key will store this message. This key will be unique
-                val randomKey = firebaseDatabase.reference.push().key
 
                 // create note and save data in sender room
                 firebaseDatabase.reference.child("Chats")

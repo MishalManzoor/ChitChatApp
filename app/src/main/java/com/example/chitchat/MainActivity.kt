@@ -23,9 +23,9 @@ import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var mauth: FirebaseAuth
+    private lateinit var mAuth: FirebaseAuth
 
     private lateinit var firebaseDatabase: FirebaseDatabase
 
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mauth = FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
 
         firebaseDatabase = FirebaseDatabase.getInstance()
 
@@ -93,8 +93,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.logout -> {
-
-                mauth.signOut()
+                mAuth.signOut()
                 startActivity(Intent(this, SignInActivity::class.java))
             }
         }

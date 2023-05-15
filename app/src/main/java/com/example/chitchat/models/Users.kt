@@ -7,5 +7,5 @@ data class Users (
     var profilePic : String = "",
     var id : String = "",
     var lastMessage : String = "",
-    var status : String = "",
+    var status : String = ""
         )

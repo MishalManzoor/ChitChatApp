@@ -11,7 +11,6 @@ import com.example.chitchat.MainActivity
 import com.example.chitchat.R
 import com.example.chitchat.databinding.ActivitySettingsBinding
 import com.example.chitchat.models.Users
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
