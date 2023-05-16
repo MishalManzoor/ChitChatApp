@@ -22,11 +22,11 @@ import com.squareup.picasso.Picasso
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivitySettingsBinding
+    private lateinit var binding: ActivitySettingsBinding
 
-    private lateinit var mauth : FirebaseAuth
+    private lateinit var mauth: FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
-    private lateinit var storage : FirebaseStorage
+    private lateinit var storage: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,8 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.backBtn.setOnClickListener {
             startActivity(
-                Intent(this, MainActivity::class.java))
+                Intent(this, MainActivity::class.java)
+            )
         }
 
         binding.addBtn.setOnClickListener {
@@ -50,12 +51,17 @@ class SettingsActivity : AppCompatActivity() {
             previewRequest.launch(intent)
         }
 
-        binding.saveBtn.setOnClickListener{
+        binding.saveBtn.setOnClickListener {
             val name = binding.userName.text.toString()
             val about = binding.about.text.toString()
 
+            // get name
+            binding.userName.setText(name)
+            // get about
+            binding.about.setText(about)
+
             //  to update the value
-            val obj = HashMap<String , Any>()
+            val obj = HashMap<String, Any>()
             obj["name"] = name
             obj["status"] = about
 
@@ -72,7 +78,7 @@ class SettingsActivity : AppCompatActivity() {
 
         firebaseDatabase.reference.child("Users")
             .child(FirebaseAuth.getInstance().uid.toString())
-            .addListenerForSingleValueEvent(object : ValueEventListener{
+            .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     val users = snapshot.getValue(Users::class.java)
@@ -81,8 +87,7 @@ class SettingsActivity : AppCompatActivity() {
                     if (users!!.profilePic.isEmpty()) {
                         binding.profilePic1.setImageResource(R.drawable.avatar3)
                     } else {
-                        Picasso.get().load(users.profilePic)
-                            .placeholder(R.drawable.avatar3).into(binding.profilePic1)
+                        Picasso.get().load(users.profilePic).into(binding.profilePic1)
                     }
 
                     // get name
@@ -92,7 +97,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    Log.d("TAG",error.toString())
+                    Log.d("TAG", error.toString())
                 }
             })
     }
@@ -102,12 +107,12 @@ class SettingsActivity : AppCompatActivity() {
             // by default its null, if user is not set any image it is null
             if (it.data?.data != null) {
 
-                val mFile : Uri? = it.data!!.data
+                val mFile: Uri? = it.data!!.data
                 binding.profilePic1.setImageURI(mFile)
 
-                val reference : StorageReference =
+                val reference: StorageReference =
                     storage.reference.child("Profile_picture")
-                    .child(FirebaseAuth.getInstance().uid.toString())
+                        .child(FirebaseAuth.getInstance().uid.toString())
 
                 reference.putFile(mFile!!)
                     .addOnSuccessListener {

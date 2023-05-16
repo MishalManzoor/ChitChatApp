@@ -28,7 +28,6 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var progressDialog: ProgressDialog
 
     private var verify : Boolean = false
-    private var isAlreadyLogin : Boolean = false
 
     private lateinit var client : GoogleSignInClient
 
@@ -53,7 +52,6 @@ class SignInActivity : AppCompatActivity() {
 
         client = GoogleSignIn.getClient(this , gso)
 
-
         binding.userSignIn.setOnClickListener {
 
             if (binding.userEmailLogIn.text.toString().isNotEmpty()
@@ -73,7 +71,6 @@ class SignInActivity : AppCompatActivity() {
                             verify = mAuth.currentUser?.isEmailVerified == true
 
                             if (verify) {
-                                isAlreadyLogin = true
 
                                startActivity(Intent(this,
                                       MainActivity::class.java))
@@ -163,6 +160,7 @@ class SignInActivity : AppCompatActivity() {
 
                     val users = Users()
                     if (user != null) {
+                        users.email = user.email.toString()
                         users.id = user.uid
                         users.profilePic = user.photoUrl.toString()
                         users.name = user.displayName.toString()
@@ -170,7 +168,6 @@ class SignInActivity : AppCompatActivity() {
                             .child("Users")
                             .child(user.uid).setValue(users)
                     }
-
 
                     startActivity(Intent(this@SignInActivity, MainActivity::class.java))
                     Toast.makeText(
