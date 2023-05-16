@@ -1,6 +1,7 @@
 package com.example.chitchat.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class GroupAdapter(
+    private var c : Context,
     private var mList: List<Message>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
