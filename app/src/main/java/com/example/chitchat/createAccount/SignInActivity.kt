@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.chitchat.MainActivity
 import com.example.chitchat.R
 import com.example.chitchat.databinding.ActivitySignInBinding

@@ -45,7 +45,7 @@ class ChatDetailsActivity : AppCompatActivity() {
 
         list = ArrayList()
 
-        adapter = ChatAdapter(this, list , " ")
+        adapter = ChatAdapter(this, list , receiverId)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 

@@ -8,7 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chitchat.MainActivity
-import com.example.chitchat.adapter.ChatAdapter
+import com.example.chitchat.adapter.GroupAdapter
 import com.example.chitchat.databinding.ActivityGroupChatBinding
 import com.example.chitchat.models.Message
 import com.google.firebase.auth.FirebaseAuth
@@ -26,7 +26,8 @@ class GroupChatActivity : AppCompatActivity() {
     private lateinit var firebaseDatabase: FirebaseDatabase
 
     private lateinit var list: List<Message>
-    private lateinit var adapter: ChatAdapter
+
+    private lateinit var adapter: GroupAdapter
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,12 +42,9 @@ class GroupChatActivity : AppCompatActivity() {
         mauth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
 
-        adapter = ChatAdapter(this, list, "")
+        adapter = GroupAdapter(list)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // sender id
-        val senderId = FirebaseAuth.getInstance().uid.toString()
 
         binding.userName1.text = "Friends Group"
 
@@ -55,6 +53,9 @@ class GroupChatActivity : AppCompatActivity() {
                 Intent(this, MainActivity::class.java)
             )
         }
+
+        // sender id
+        val senderId = FirebaseAuth.getInstance().uid.toString()
 
         binding.send1.setOnClickListener {
             if (binding.message1.text.isEmpty()) {
