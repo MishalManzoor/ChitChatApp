@@ -38,7 +38,6 @@ class UserAdapter(private var mList: List<Users>, var context: Context) :
         if (list.profilePic.trim().isEmpty()) {
             holder.image.setImageResource(R.drawable.avatar3)
         } else {
-            //  Glide.with(context).load(list.profilePic).into(holder.image)
             Picasso.get().load(list.profilePic)
                 .placeholder(R.drawable.avatar3).into(holder.image)
         }
