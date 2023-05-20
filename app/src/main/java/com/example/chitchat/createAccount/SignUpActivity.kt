@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivitySignUpBinding
-    private lateinit var mauth : FirebaseAuth
+    private lateinit var mAuth : FirebaseAuth
     private lateinit var firebaseDatabase: FirebaseDatabase
     private lateinit var progressDialog: ProgressDialog
     private lateinit var verify : Task<Void>
@@ -26,7 +26,7 @@ class SignUpActivity : AppCompatActivity() {
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mauth = FirebaseAuth.getInstance()
+        mAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
 
         supportActionBar?.hide()
@@ -49,7 +49,7 @@ class SignUpActivity : AppCompatActivity() {
 
                 progressDialog.show()
 
-                mauth.createUserWithEmailAndPassword(
+                mAuth.createUserWithEmailAndPassword(
                     binding.userEmail.text.toString(),
                     binding.userPassword.text.toString())
                     .addOnCompleteListener { task ->
@@ -57,7 +57,7 @@ class SignUpActivity : AppCompatActivity() {
 
                         if (task.isSuccessful){
 
-                            verify = mauth.currentUser?.sendEmailVerification()
+                            verify = mAuth.currentUser?.sendEmailVerification()
                                 ?.addOnSuccessListener{
 
                                     Toast.makeText(
@@ -122,7 +122,7 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
-        if (mauth.currentUser?.email?.isNotEmpty() == true){
+        if (mAuth.currentUser?.email?.isNotEmpty() == true){
             startActivity(Intent(this, MainActivity::class.java))
         }
     }
