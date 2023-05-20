@@ -17,11 +17,11 @@ import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 class ChatAdapter(
     private var c: Context,
     private var mList: List<Message>,
-    private var rId : String) :
+    private var rId: String
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -65,7 +65,7 @@ class ChatAdapter(
             viewHolder.binding.timeSt.text = formatTime
 
             // to delete message
-            viewHolder.binding.layoutRight.setOnLongClickListener {
+            viewHolder.binding.layout.setOnLongClickListener {
 
                 val dialogBuilder = AlertDialog.Builder(c)
                 dialogBuilder.setMessage("Are you sure to delete this message?")
@@ -85,7 +85,7 @@ class ChatAdapter(
                         applesQuery.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onDataChange(dataSnapshot: DataSnapshot) {
                                 for (appleSnapshot in dataSnapshot.children) {
-                                        appleSnapshot.ref.setValue(null)
+                                    appleSnapshot.ref.setValue(null)
                                 }
                             }
 
@@ -112,47 +112,6 @@ class ChatAdapter(
 
             val formatTime = formatTime(date)
             viewHolder.binding.timeSt.text = formatTime
-
-            // to delete message
-            viewHolder.binding.layoutLeft.setOnLongClickListener {
-
-                val dialogBuilder = AlertDialog.Builder(c)
-                dialogBuilder.setMessage("Are you sure to delete this message?")
-                    .setPositiveButton("Delete") { _, _ ->
-
-                        val ref = FirebaseDatabase.getInstance().reference
-                        val applesQuery: Query =
-                            ref.child("Chats")
-                                .child(FirebaseAuth.getInstance().uid.toString() + rId)
-                                .child("message")
-                                .orderByChild("message")
-                                .equalTo(viewHolder.binding.msgChat.text.toString())
-                                 // to retrieve the most recent items in a database
-                                // and delete this message
-                                .limitToLast(1)
-
-                        applesQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                for (appleSnapshot in dataSnapshot.children) {
-                                        appleSnapshot.ref.setValue(null)
-                                }
-                            }
-
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                Log.e("TAG", "onCancelled", databaseError.toException())
-                            }
-                        })
-                    }
-                    .setNegativeButton("Cancel") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-
-                val alert = dialogBuilder.create()
-                alert.setTitle("Test")
-                alert.show()
-
-                return@setOnLongClickListener true
-            }
         }
     }
 

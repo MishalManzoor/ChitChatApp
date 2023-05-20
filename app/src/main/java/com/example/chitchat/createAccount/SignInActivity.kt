@@ -109,7 +109,29 @@ class SignInActivity : AppCompatActivity() {
         }
 
         binding.userGoogle.setOnClickListener {
-            signIn()
+            //  retrieves the currently signed-in user from the Firebase Authentication
+            val currentUser = mAuth.currentUser
+            val isGoogleAccount = currentUser?.providerData?.any{
+                it.providerId == GoogleAuthProvider.PROVIDER_ID
+            }?:false
+
+            if (isGoogleAccount){
+                val user = mAuth.currentUser
+
+                val users = Users()
+                if (user != null) {
+                    users.email = user.email.toString()
+                    users.id = user.uid
+                    users.profilePic = user.photoUrl.toString()
+                    users.name = user.displayName.toString()
+                    firebaseDatabase.reference
+                        .child("Users")
+                        .child(user.uid).setValue(users)
+                }
+            }
+            else{
+                signIn()
+            }
         }
 
         if (mAuth.currentUser?.email?.isNotEmpty() == true && verify){
@@ -156,20 +178,9 @@ class SignInActivity : AppCompatActivity() {
                     // sign in successful, update ui
                     Log.e("check", "signInWithCredential : success")
 
-                    val user = mAuth.currentUser
+                    startActivity(
+                        Intent(this@SignInActivity, MainActivity::class.java))
 
-                    val users = Users()
-                    if (user != null) {
-                        users.email = user.email.toString()
-                        users.id = user.uid
-                        users.profilePic = user.photoUrl.toString()
-                        users.name = user.displayName.toString()
-                        firebaseDatabase.reference
-                            .child("Users")
-                            .child(user.uid).setValue(users)
-                    }
-
-                    startActivity(Intent(this@SignInActivity, MainActivity::class.java))
                     Toast.makeText(
                         this@SignInActivity,
                         "Sign in with Google",

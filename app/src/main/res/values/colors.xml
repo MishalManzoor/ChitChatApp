@@ -22,5 +22,6 @@
     <color name="grayBackground">#BCBCBC</color>
     <color name="chatbackground">#AAAAAA</color>
 
-    <color name="red">#D10A0A</color>
+    <color name="colorOffline">#FF0000</color>
+    <color name="colorOnline">#00FF00</color>
 </resources>

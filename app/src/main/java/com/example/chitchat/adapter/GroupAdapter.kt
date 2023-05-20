@@ -1,7 +1,9 @@
 package com.example.chitchat.adapter
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import com.example.chitchat.databinding.LeftChatBinding
 import com.example.chitchat.databinding.RightChatBinding
 import com.example.chitchat.models.Message
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,6 +61,44 @@ class GroupAdapter(
 
             val formatTime = formatTime(date)
             viewHolder.binding.timeSt.text = formatTime
+
+            viewHolder.binding.layout.setOnLongClickListener {
+
+                val dialogBuilder = AlertDialog.Builder(c)
+                dialogBuilder.setMessage("Are you sure to delete this message?")
+                    .setPositiveButton("Delete") { _, _ ->
+
+                        val ref = FirebaseDatabase.getInstance().reference
+                        val applesQuery: Query =
+                            ref.child("Group Chat")
+                                .orderByChild("senderId")
+                                .equalTo(list.senderId)
+                                // to retrieve the most recent items in a database
+                                // and delete this message
+                                .limitToLast(1)
+
+                        applesQuery.addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                for (appleSnapshot in dataSnapshot.children) {
+                                    appleSnapshot.ref.setValue(null)
+                                }
+                            }
+
+                            override fun onCancelled(databaseError: DatabaseError) {
+                                Log.e("TAG", "onCancelled", databaseError.toException())
+                            }
+                        })
+                    }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                val alert = dialogBuilder.create()
+                alert.setTitle("Test")
+                alert.show()
+
+                return@setOnLongClickListener true
+            }
 
         } else {
             val viewHolder = holder as ReceiverViewHolder
