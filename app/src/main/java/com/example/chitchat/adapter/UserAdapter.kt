@@ -44,7 +44,7 @@ class UserAdapter(private var mList: List<Users>, var context: Context) :
 
         holder.layout.setOnClickListener {
             val intent = Intent(context, ChatDetailsActivity::class.java)
-            intent.putExtra("id", list.id)
+         //   intent.putExtra("sender", list.sender)
             intent.putExtra("name", list.name)
             intent.putExtra("pic", list.profilePic)
             context.startActivity(intent)

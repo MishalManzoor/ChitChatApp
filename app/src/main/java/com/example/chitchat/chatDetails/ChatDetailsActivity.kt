@@ -1,13 +1,13 @@
 package com.example.chitchat.chatDetails
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chitchat.MainActivity
-import com.example.chitchat.R
 import com.example.chitchat.adapter.ChatAdapter
 import com.example.chitchat.databinding.ActivityChatBinding
 import com.example.chitchat.models.Message
@@ -16,7 +16,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.squareup.picasso.Picasso
 import java.util.Date
 
 class ChatDetailsActivity : AppCompatActivity() {
@@ -38,34 +37,33 @@ class ChatDetailsActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         firebaseDatabase = FirebaseDatabase.getInstance()
 
-        // sender id
-        val senderId = FirebaseAuth.getInstance().uid.toString()
-        // receiver id
-        val receiverId = intent.getStringExtra("id")!!
+        val i = intent?.extras
+        val receiverName = i?.getString("rName") ?: ""
+        val senderName = i?.getString("sName") ?: ""
+        val sId = i?.getString("sId") ?: ""
+        val rId = i?.getString("rId") ?: ""
 
         list = ArrayList()
 
-        adapter = ChatAdapter(this, list , receiverId)
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-
-        val profilePic = intent.getStringExtra("pic")!!
-        val name = intent.getStringExtra("name")!!
-
-        // set name
-        binding.userName.text = name
-
-        // set Image
-        if (profilePic.isEmpty()) {
-            binding.pic.setImageResource(R.drawable.avatar3)
-        } else {
-            Picasso.get().load(profilePic)
-                .placeholder(R.drawable.avatar3).into(binding.pic)
-        }
-
         // create rooms
-        val senderRoom = senderId + receiverId
-        val receiverRoom = receiverId + senderId
+        val senderRoom = sId + rId
+        val receiverRoom = rId + sId
+
+        adapter = ChatAdapter(this, list, rId,
+            sId, senderRoom , receiverRoom)
+        binding.recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(this)
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.
+        uid.toString()
+        // set name
+        binding.userName.text = if (sId == currentUserId) {
+            receiverName
+        }
+        else{
+            senderName
+        }
 
         binding.send.setOnClickListener {
             if (binding.message.text.isEmpty()) {
@@ -76,32 +74,40 @@ class ChatDetailsActivity : AppCompatActivity() {
                     .show()
             } else {
                 val message = Message(
-                    binding.message.text.toString(), senderId, Date().time
+                    message = binding.message.text.toString(),
+                    id = FirebaseAuth.getInstance().uid.toString(),//current user
+                    timeStamp = Date().time,
+                    name = senderName
                 )
 
                 // create note and save data in sender room
-                firebaseDatabase.reference.child("Chats")
+                firebaseDatabase.reference
+                    .child("Chats")
                     .child(senderRoom)
                     .child("message")
-                    // .child(randomKey)
                     .push()
                     .setValue(message)
                     .addOnSuccessListener {
-
                         // save data in receive room too
-                        firebaseDatabase.reference.child("Chats")
+                        val message1 = Message(
+                            message = binding.message.text.toString(),
+                            id = FirebaseAuth.getInstance().uid.toString(),//current user
+                            timeStamp = Date().time,
+                            name = receiverName
+                        )
+                        firebaseDatabase.reference
+                            .child("Chats")
                             .child(receiverRoom)
                             .child("message")
-                           // .child(randomKey)
                             .push()
-                            .setValue(message)
+                            .setValue(message1)
                             .addOnSuccessListener {
                                 binding.message.text = null
                                 Toast.makeText(
                                     this@ChatDetailsActivity,
-                                    "Message sent!!", Toast.LENGTH_SHORT
-                                )
-                                    .show()
+                                    "Message sent!!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                     }
             }
@@ -110,26 +116,33 @@ class ChatDetailsActivity : AppCompatActivity() {
         // back button
         binding.back.setOnClickListener {
             startActivity(
-                Intent(this@ChatDetailsActivity, MainActivity::class.java)
+                Intent(
+                    this@ChatDetailsActivity,
+                    MainActivity::class.java
+                )
             )
         }
 
-        firebaseDatabase.reference.child("Chats")
+        // get message
+        firebaseDatabase.reference
+            .child("Chats")
             .child(senderRoom)
             .child("message")
             .addValueEventListener(object : ValueEventListener {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onDataChange(snapshot: DataSnapshot) {
-
                     (list as ArrayList).clear()
+                    if (snapshot.exists()) {
+                        for (snap in snapshot.children) {
 
-                    for (snap in snapshot.children) {
+                            val model = snap.getValue(Message::class.java)
 
-                        val model = snap.getValue(Message::class.java)
-
-                        (list as ArrayList).add(model!!)
+                            if (model != null) {
+                                (list as ArrayList).add(model)
+                            }
+                        }
+                        adapter.notifyDataSetChanged()
                     }
-                    adapter.notifyDataSetChanged()
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -140,5 +153,100 @@ class ChatDetailsActivity : AppCompatActivity() {
                         .show()
                 }
             })
+
+        val sp =
+            getSharedPreferences("Room", Context.MODE_PRIVATE)
+        val e = sp.edit()
+        e.putString("sRoom", senderRoom)
+        e.apply()
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// set Image
+//if (binding.pic.isEmpty()) {
+//    binding.pic.setImageResource(R.drawable.avatar3)
+//} else {
+//    Picasso.get().load(profilePic)
+//        .placeholder(R.drawable.avatar3).into(binding.pic)
+//}
+
+//        val profilePic = intent.getStringExtra("pic")!!
+//        val name = intent.getStringExtra("name")!!
+
+//        val clickedEmail = i?.getString("clickedEmail") ?: ""
+
+//        val sender = i?.getString("s") ?: ""
+//        val receiver = i?.getString("r") ?: ""

@@ -39,6 +39,7 @@ class SignInActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         mAuth = FirebaseAuth.getInstance()
+
         firebaseDatabase = FirebaseDatabase.getInstance()
 
         progressDialog = ProgressDialog(this)
@@ -72,16 +73,20 @@ class SignInActivity : AppCompatActivity() {
 
                             if (verify) {
 
-                               startActivity(Intent(this,
-                                      MainActivity::class.java))
-                              }
-                           else{
-                             Toast.makeText(
-                                  this,
-                                       "Please Verify your account",
-                                             Toast.LENGTH_SHORT)
-                                          .show()
-                                 }
+                                startActivity(
+                                    Intent(
+                                        this,
+                                        MainActivity::class.java
+                                    )
+                                )
+                            } else {
+                                Toast.makeText(
+                                    this,
+                                    "Please Verify your account",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
 
                         } else {
                             Toast.makeText(
@@ -91,10 +96,15 @@ class SignInActivity : AppCompatActivity() {
                             )
                                 .show()
                         }
+                    }.addOnFailureListener {
+                        Toast.makeText(this,
+                            "Something is wrong!",
+                            Toast.LENGTH_SHORT).show()
                     }
             } else {
                 if(binding.userEmailLogIn.text.toString().isEmpty()){
                     binding.userEmailLogIn.error = "Enter your email"
+
                     return@setOnClickListener
                 }
                 if (binding.userPasswordLognIn.text.toString().isEmpty()){

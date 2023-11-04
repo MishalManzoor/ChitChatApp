@@ -39,4 +39,5 @@
     <string name="back1">back1</string>
     <string name="verify_you_email">Verify you Email</string>
     <string name="login2">Login</string>
+    <string name="fab_button">fab_button</string>
 </resources>

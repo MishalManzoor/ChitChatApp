@@ -4,24 +4,23 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.util.Base64
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.chitchat.adapter.UserAdapter
+import com.example.chitchat.adapter.ShowChatAdapter
+import com.example.chitchat.chatDetails.ChatDetailsActivity
+import com.example.chitchat.friendList.ActivityForFragments
 import com.example.chitchat.createAccount.SignInActivity
 import com.example.chitchat.databinding.ActivityMainBinding
-import com.example.chitchat.group.GroupChatActivity
-import com.example.chitchat.models.Users
+import com.example.chitchat.models.FriendList
 import com.example.chitchat.settings.SettingsActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() , ShowChatAdapter.OnActionClick{
 
     private lateinit var binding: ActivityMainBinding
 
@@ -29,11 +28,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var firebaseDatabase: FirebaseDatabase
 
-    private var mList: List<Users> = ArrayList()
+    lateinit var adapter : ShowChatAdapter
 
-    private lateinit var adapter: UserAdapter
+    val friendList: ArrayList<FriendList> = ArrayList()
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -43,35 +42,74 @@ class MainActivity : AppCompatActivity() {
 
         firebaseDatabase = FirebaseDatabase.getInstance()
 
-        adapter = UserAdapter(mList, this)
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(this)
+        adapter = ShowChatAdapter(friendList, this)
         binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-        firebaseDatabase.reference.child("Users")
-            .addValueEventListener(object : ValueEventListener {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun onDataChange(snapshot: DataSnapshot) {
+        val currentUserEmail = FirebaseAuth.getInstance()
+            .currentUser?.email.toString()
 
-                    (mList as ArrayList).clear()
+        val encodedEmail = encodeMail(currentUserEmail)
 
-                    for (snap: DataSnapshot in snapshot.children) {
+        firebaseDatabase.reference
+            .child("friends")
+            .child(encodedEmail)
+            .child("friendList")
+            .get()
+            .addOnCompleteListener { data ->
+                if (data.isSuccessful) {
+                    val result = data.result
+                    if (result != null && result.exists()) {
+                        for (item in result.children) {
+                            val receiverName = item.child("receiverName")
+                                .getValue(String::class.java).toString()
+                            val senderName = item.child("senderName")
+                                .getValue(String::class.java).toString()
+                            val sender = item.child("sender")
+                                .getValue(String::class.java).toString()
+                            val receiver = item.child("receiver")
+                                .getValue(String::class.java).toString()
+                            val senderProfilePic = item
+                                .child("senderProfilePic")
+                                .getValue(String::class.java).toString()
+                            val receiverProfilePic = item
+                                .child("receiverProfilePic")
+                                .getValue(String::class.java).toString()
+                            val senderId = item.child("senderId")
+                                .getValue(String::class.java).toString()
+                            val receiverId = item.child("receiverId")
+                                .getValue(String::class.java).toString()
 
-                        val users = snap.getValue(Users::class.java)
+                            val addToFriendList = FriendList(
+                                senderName = senderName,
+                                sender = sender,
+                                receiverName = receiverName,
+                                receiver = receiver,
+                                senderProfilePic = senderProfilePic,
+                                receiverProfilePic = receiverProfilePic,
+                                senderId = senderId,
+                                receiverId = receiverId
 
-                        if (users != null) {
-                            users.id = snap.key.toString()
-                            if (users.id != FirebaseAuth.getInstance().uid) {
-                                (mList as ArrayList).add(users)
-                            }
+                            )
+                            friendList.add(addToFriendList)
                         }
+                        adapter.notifyDataSetChanged()
                     }
-                    adapter.notifyDataSetChanged()
                 }
+            }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.d("TAG", error.toString())
-                }
-            })
+        binding.floatingActionButton.setOnClickListener {
+            startActivity(Intent(this,
+                ActivityForFragments::class.java))
+        }
+    }
+
+    private fun showInAdapter(list : ArrayList<FriendList>){
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(this)
+        adapter = ShowChatAdapter(list, this)
+        binding.recyclerView.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,9 +122,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.group_chat -> {
-                startActivity(Intent(this, GroupChatActivity::class.java))
-            }
 
             R.id.setting -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
@@ -100,8 +135,10 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    @Deprecated("Deprecated in Java",
-        ReplaceWith("super.onBackPressed()", "androidx.appcompat.app.AppCompatActivity")
+    @Deprecated(
+        "Deprecated in Java",
+        ReplaceWith("super.onBackPressed()",
+            "androidx.appcompat.app.AppCompatActivity")
     )
     override fun onBackPressed() {
 
@@ -122,5 +159,37 @@ class MainActivity : AppCompatActivity() {
         val alert = dialogBuilder.create()
         // show alert dialog
         alert.show()
+    }
+
+    private fun encodeMail(mail : String) : String{
+        return Base64.encodeToString(
+            mail.toByteArray(),
+            Base64.NO_WRAP
+        )
+    }
+
+    override fun onClick(
+        clickedFriendEmail: String,
+        senderName: String,
+        senderEmail: String,
+        receiverEmail: String,
+        receiverName: String,
+        senderId: String,
+        receiverId: String)
+    {
+
+        Toast.makeText(this,
+            "clicked $clickedFriendEmail",
+            Toast.LENGTH_SHORT)
+            .show()
+
+        val intent = Intent(this, ChatDetailsActivity::class.java)
+        intent.putExtra("clickedEmail", clickedFriendEmail)
+        intent.putExtra("sName", senderName)
+        intent.putExtra("rName", receiverName)
+        intent.putExtra("s", senderEmail)
+        intent.putExtra("sId", senderId)
+        intent.putExtra("rId", receiverId)
+        startActivity(intent)
     }
 }

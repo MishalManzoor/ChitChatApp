@@ -3,6 +3,7 @@ package com.example.chitchat.models
 data class Users (
     var name : String = "",
     var email : String = "",
+    var sender : String = "",
     var password : String = "",
     var profilePic : String = "",
     var id : String = "",

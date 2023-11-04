@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chitchat.R
 import com.example.chitchat.databinding.LeftChatBinding
@@ -20,9 +21,11 @@ import java.util.*
 class ChatAdapter(
     private var c: Context,
     private var mList: List<Message>,
-    private var rId: String
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var rId: String,
+    private var sId: String,
+    private var senderRoom: String,
+    private var receiverRoom: String
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val SENT_BY_USER = 0
@@ -33,11 +36,13 @@ class ChatAdapter(
         var binding = RightChatBinding.bind(itemView)
     }
 
-    inner class ReceiverViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ReceiverViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
         var binding = LeftChatBinding.bind(itemView)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            RecyclerView.ViewHolder {
 
         return if (viewType == SENT_BY_USER) {
 
@@ -71,28 +76,61 @@ class ChatAdapter(
                 dialogBuilder.setMessage("Are you sure to delete this message?")
                     .setPositiveButton("Delete") { _, _ ->
 
+                        val textMessage =
+                            viewHolder.binding.msgChat.text.toString()
+
                         val ref = FirebaseDatabase.getInstance().reference
-                        val applesQuery: Query =
-                            ref.child("Chats")
-                                .child(FirebaseAuth.getInstance().uid.toString() + rId)
-                                .child("message")
-                                .orderByChild("message")
-                                .equalTo(viewHolder.binding.msgChat.text.toString())
-                                // to retrieve the most recent items in a database
-                                // and delete this message
-                                .limitToLast(1)
 
-                        applesQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-                            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                                for (appleSnapshot in dataSnapshot.children) {
-                                    appleSnapshot.ref.setValue(null)
+                        ref.child("Chats")
+                            .child(senderRoom)
+                            .child("message")
+                            .orderByChild("message")
+                            .equalTo(textMessage)
+                            .addListenerForSingleValueEvent(object
+                                : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    for (snap in dataSnapshot.children) {
+                                        snap.ref.removeValue()
+
+                                        Toast.makeText(
+                                            c,
+                                            "Message Deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
-                            }
 
-                            override fun onCancelled(databaseError: DatabaseError) {
-                                Log.e("TAG", "onCancelled", databaseError.toException())
-                            }
-                        })
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    Log.e(
+                                        "TAG", "onCancelled",
+                                        databaseError.toException()
+                                    )
+                                }
+                            })
+
+
+                        ref.child("Chats")
+                            .child(receiverRoom)
+                            .child("message")
+                            .orderByChild("message")
+                            .equalTo(textMessage)
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                    for (snap in dataSnapshot.children) {
+                                        snap.ref.removeValue()
+
+                                        Toast.makeText(
+                                            c,
+                                            "Message Deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+
+                                override fun onCancelled(databaseError: DatabaseError) {
+                                    Log.e("TAG", "onCancelled", databaseError.toException())
+                                }
+                            })
                     }
                     .setNegativeButton("Cancel") { dialog, _ ->
                         dialog.dismiss()
@@ -120,7 +158,8 @@ class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (FirebaseAuth.getInstance().uid == mList[position].senderId) {
+        val message = mList[position]
+        return if (FirebaseAuth.getInstance().uid == message.id) {
             SENT_BY_USER
         } else {
             RECEIVE_BY_User
