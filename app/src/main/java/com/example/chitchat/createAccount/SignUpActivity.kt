@@ -4,11 +4,11 @@ import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.chitchat.MainActivity
 import com.example.chitchat.databinding.ActivitySignUpBinding
-import com.example.chitchat.models.Users
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -87,22 +87,6 @@ class SignUpActivity : AppCompatActivity() {
                                             Toast.LENGTH_LONG
                                         ).show()
 
-                                        val id = task.result.user?.uid.toString()
-
-                                        val user = Users(
-                                           name = binding.userName
-                                                .text
-                                                .toString(),
-                                            email = binding.userEmail.text.toString(),
-                                            password = binding.userPassword.text.toString(),
-                                            id = id
-                                        )
-
-                                        firebaseDatabase.reference
-                                            .child("Users")
-                                            .child(id)
-                                            .setValue(user)
-
                                         binding.userName.setText("")
                                         binding.userEmail.setText("")
                                         binding.userPassword.setText("")
@@ -114,27 +98,14 @@ class SignUpActivity : AppCompatActivity() {
                                             )
                                         )
                                     }?.addOnFailureListener {
-                                        Toast.makeText(
-                                            this@SignUpActivity,
-                                            "Sign up failed: " +
-                                                    "${task.exception?.message}",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        Log.d("signUp45",  "Sign up failed: ${task.exception?.message}")
                                     } as Task<Void>
 
                             }?.addOnFailureListener {
-                                Toast.makeText(
-                                    this@SignUpActivity,
-                                    "Error updating profile$it",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Log.d("signUp45",  "Error updating profile$it")
                             }
                     } else {
-                        Toast.makeText(
-                            this@SignUpActivity,
-                            task.exception.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Log.d("signUp45", task.exception.toString())
                     }
                 }
         } else {

@@ -6,7 +6,5 @@ data class FriendList (
     var sender : String = "",
     var receiver : String = "",
     var receiverId : String = "",
-    var senderId : String = "",
-    var senderProfilePic : String = "",
-    var receiverProfilePic : String = ""
+    var senderId : String = ""
         )

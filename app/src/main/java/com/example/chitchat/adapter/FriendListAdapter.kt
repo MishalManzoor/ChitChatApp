@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chitchat.R
 import com.example.chitchat.models.FriendList
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.picasso.Picasso
 
 class FriendListAdapter(
     private val mList: List<FriendList>
@@ -42,18 +41,8 @@ class FriendListAdapter(
         val encodeSenderEmail = encodeEmail(list.sender)
         val currentEncodeEmail = encodeEmail(currentUserEmail)
 
-        val profilePic = if (encodeSenderEmail == currentUserId){
-            list.receiverProfilePic
-        }else{
-            list.senderProfilePic
-        }
+        holder.profileImage.setImageResource(R.drawable.e)
 
-        if (profilePic.isNotEmpty()) {
-            Picasso.get().load(profilePic).into(holder.profileImage)
-        } else {
-            // Load a default image if the URL is empty
-            holder.profileImage.setImageResource(R.drawable.avatar3)
-        }
 
         holder.name.text =
             if (encodeSenderEmail == currentEncodeEmail) {

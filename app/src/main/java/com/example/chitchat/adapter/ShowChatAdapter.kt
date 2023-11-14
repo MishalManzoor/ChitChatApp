@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chitchat.R
 import com.example.chitchat.models.FriendList
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.picasso.Picasso
+
 class ShowChatAdapter(
     private val mList: List<FriendList>,
     private val onActionClick: OnActionClick
@@ -52,18 +52,9 @@ class ShowChatAdapter(
         val encodeSenderEmail = encodeEmail(list.sender)
         val currentEncodeEmail = encodeEmail(currentUserEmail)
 
-        val profilePic = if (encodeSenderEmail == currentUserId){
-            list.receiverProfilePic
-        }else{
-            list.senderProfilePic
-        }
 
-        if (profilePic.isNotEmpty()) {
-            Picasso.get().load(profilePic).into(holder.profileImage)
-        } else {
-            // Load a default image if the URL is empty
-            holder.profileImage.setImageResource(R.drawable.avatar3)
-        }
+        holder.profileImage.setImageResource(R.drawable.e)
+
 
         holder.name.text =
             if (encodeSenderEmail == currentEncodeEmail) {
@@ -103,5 +94,4 @@ class ShowChatAdapter(
             Base64.NO_WRAP
         )
     }
-
 }

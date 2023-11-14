@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chitchat.MainActivity
+import com.example.chitchat.R
 import com.example.chitchat.adapter.ChatAdapter
 import com.example.chitchat.databinding.ActivityChatBinding
 import com.example.chitchat.models.Message
@@ -65,6 +66,8 @@ class ChatDetailsActivity : AppCompatActivity() {
             senderName
         }
 
+        binding.pic.setImageResource(R.drawable.e)
+
         binding.send.setOnClickListener {
             if (binding.message.text.isEmpty()) {
                 Toast.makeText(
@@ -77,7 +80,7 @@ class ChatDetailsActivity : AppCompatActivity() {
                     message = binding.message.text.toString(),
                     id = FirebaseAuth.getInstance().uid.toString(),//current user
                     timeStamp = Date().time,
-                    name = senderName
+                    senderName = senderName
                 )
 
                 // create note and save data in sender room
@@ -93,7 +96,7 @@ class ChatDetailsActivity : AppCompatActivity() {
                             message = binding.message.text.toString(),
                             id = FirebaseAuth.getInstance().uid.toString(),//current user
                             timeStamp = Date().time,
-                            name = receiverName
+                            receiverName = receiverName
                         )
                         firebaseDatabase.reference
                             .child("Chats")
@@ -161,92 +164,3 @@ class ChatDetailsActivity : AppCompatActivity() {
         e.apply()
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// set Image
-//if (binding.pic.isEmpty()) {
-//    binding.pic.setImageResource(R.drawable.avatar3)
-//} else {
-//    Picasso.get().load(profilePic)
-//        .placeholder(R.drawable.avatar3).into(binding.pic)
-//}
-
-//        val profilePic = intent.getStringExtra("pic")!!
-//        val name = intent.getStringExtra("name")!!
-
-//        val clickedEmail = i?.getString("clickedEmail") ?: ""
-
-//        val sender = i?.getString("s") ?: ""
-//        val receiver = i?.getString("r") ?: ""

@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chitchat.R
 import com.example.chitchat.models.Invite
 import com.google.firebase.auth.FirebaseAuth
-import com.squareup.picasso.Picasso
 
 class InviteAdapter(private var mList : List<Invite>,
                     private val onActionClick: OnActionClick,
@@ -39,18 +38,8 @@ class InviteAdapter(private var mList : List<Invite>,
 
         holder.name.text = list.senderName
 
-        val profilePic = if (list.sender == currentUserId){
-            list.receiverProfilePic
-        }else{
-            list.senderProfilePic
-        }
+        holder.profileImage.setImageResource(R.drawable.e)
 
-        if (profilePic.isNotEmpty()) {
-            Picasso.get().load(profilePic).into(holder.profileImage)
-        } else {
-            // Load a default image if the URL is empty
-            holder.profileImage.setImageResource(R.drawable.avatar3)
-        }
 
         holder.accept.setOnClickListener {
             onActionClick.onAcceptClick(list.senderName,

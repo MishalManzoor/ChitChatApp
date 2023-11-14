@@ -75,18 +75,5 @@
             android:textAllCaps="false"
             app:backgroundTint="@color/design_default_color_secondary_variant"
             app:cornerRadius="8dp" />
-
-        <Button
-            android:id="@+id/userGoogle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:backgroundTint="@color/white"
-            android:drawableStart="@drawable/ic_google"
-            android:padding="15dp"
-            android:text="@string/google"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            app:cornerRadius="8dp" />
     </LinearLayout>
 </LinearLayout>

@@ -125,7 +125,6 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
             val senderId = currentUser?.uid
             val senderEmail = currentUser?.email
             val senderName = currentUser?.displayName
-            val senderProfilePic = currentUser?.photoUrl.toString()
 
             if (senderId == null || senderEmail == null || senderName == null) {
                 Toast.makeText(
@@ -177,8 +176,7 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
                                                     senderName = senderName,
                                                     receiver = mail,
                                                     senderId = senderId,
-                                                    sender = senderEmail,
-                                                    senderProfilePic = senderProfilePic
+                                                    sender = senderEmail
                                                 )
                                                 // Send the request with the encoded email as the key
                                                 firebaseDatabase.reference
@@ -199,11 +197,6 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
                                                             "send67",
                                                             "Failed to send request: $e"
                                                         )
-                                                        Toast.makeText(
-                                                            context,
-                                                            "Failed to send request",
-                                                            Toast.LENGTH_SHORT
-                                                        ).show()
                                                     }
                                             }
                                         } else {
@@ -213,8 +206,7 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
                                                 senderName = senderName,
                                                 receiver = mail,
                                                 senderId = senderId,
-                                                sender = senderEmail,
-                                                senderProfilePic = senderProfilePic
+                                                sender = senderEmail
                                             )
                                             // Send the request with the encoded email as the key
                                             firebaseDatabase.reference
@@ -232,11 +224,6 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
                                                 }
                                                 .addOnFailureListener { e ->
                                                     Log.e("send67", "Failed to send request: $e")
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Failed to send request",
-                                                        Toast.LENGTH_SHORT
-                                                    ).show()
                                                 }
                                         }
                                     } else {
@@ -279,9 +266,6 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
         val receiverId = FirebaseAuth.getInstance()
             .currentUser?.uid.toString()
 
-        val receiverProfilePic = FirebaseAuth.getInstance()
-            .currentUser?.photoUrl.toString()
-
         //Encode the email address to make it a valid Firebase
         // Database key
         val encodedMail = encodeEmail(receiver)
@@ -312,8 +296,7 @@ class InviteFragment : Fragment(), InviteAdapter.OnActionClick {
                                         receiver = receiver,
                                         receiverName = receiverName,
                                         senderId = senderId,
-                                        receiverId = receiverId,
-                                        receiverProfilePic = receiverProfilePic
+                                        receiverId = receiverId
                                     )
                                     list.add(invite)
                                 }

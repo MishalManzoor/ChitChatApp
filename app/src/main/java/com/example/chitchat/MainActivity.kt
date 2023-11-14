@@ -16,7 +16,6 @@ import com.example.chitchat.friendList.ActivityForFragments
 import com.example.chitchat.createAccount.SignInActivity
 import com.example.chitchat.databinding.ActivityMainBinding
 import com.example.chitchat.models.FriendList
-import com.example.chitchat.settings.SettingsActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -70,12 +69,6 @@ class MainActivity : AppCompatActivity() , ShowChatAdapter.OnActionClick{
                                 .getValue(String::class.java).toString()
                             val receiver = item.child("receiver")
                                 .getValue(String::class.java).toString()
-                            val senderProfilePic = item
-                                .child("senderProfilePic")
-                                .getValue(String::class.java).toString()
-                            val receiverProfilePic = item
-                                .child("receiverProfilePic")
-                                .getValue(String::class.java).toString()
                             val senderId = item.child("senderId")
                                 .getValue(String::class.java).toString()
                             val receiverId = item.child("receiverId")
@@ -86,8 +79,6 @@ class MainActivity : AppCompatActivity() , ShowChatAdapter.OnActionClick{
                                 sender = sender,
                                 receiverName = receiverName,
                                 receiver = receiver,
-                                senderProfilePic = senderProfilePic,
-                                receiverProfilePic = receiverProfilePic,
                                 senderId = senderId,
                                 receiverId = receiverId
 
@@ -122,11 +113,6 @@ class MainActivity : AppCompatActivity() , ShowChatAdapter.OnActionClick{
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-
-            R.id.setting -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
-            }
-
             R.id.logout -> {
                 mAuth.signOut()
                 startActivity(Intent(this, SignInActivity::class.java))
@@ -177,11 +163,6 @@ class MainActivity : AppCompatActivity() , ShowChatAdapter.OnActionClick{
         senderId: String,
         receiverId: String)
     {
-
-        Toast.makeText(this,
-            "clicked $clickedFriendEmail",
-            Toast.LENGTH_SHORT)
-            .show()
 
         val intent = Intent(this, ChatDetailsActivity::class.java)
         intent.putExtra("clickedEmail", clickedFriendEmail)

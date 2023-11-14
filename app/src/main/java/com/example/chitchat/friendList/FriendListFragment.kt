@@ -41,13 +41,6 @@ class FriendListFragment : Fragment() {
         return binding.root
     }
 
-    private fun encodeMail(mail: String): String {
-        return Base64.encodeToString(
-            mail.toByteArray(),
-            Base64.NO_WRAP
-        )
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     private fun fetchFriendList() {
         val currentUserEmail = FirebaseAuth.getInstance()
@@ -79,12 +72,6 @@ class FriendListFragment : Fragment() {
                                     .getValue(String::class.java).toString()
                                 val receiverId = item.child("receiverId")
                                     .getValue(String::class.java).toString()
-                                val senderProfilePic = item
-                                    .child("senderProfilePic")
-                                    .getValue(String::class.java).toString()
-                                val receiverProfilePic = item
-                                    .child("receiverProfilePic")
-                                    .getValue(String::class.java).toString()
 
                                 val addToFriendList = FriendList(
                                     senderName = senderName,
@@ -92,10 +79,7 @@ class FriendListFragment : Fragment() {
                                     receiverName = receiverName,
                                     receiver = receiver,
                                     senderId = senderId,
-                                    receiverId = receiverId,
-                                    senderProfilePic = senderProfilePic,
-                                    receiverProfilePic = receiverProfilePic
-
+                                    receiverId = receiverId
                                 )
                                 friendList.add(addToFriendList)
                             }
@@ -110,14 +94,19 @@ class FriendListFragment : Fragment() {
         }
     }
 
+    private fun encodeMail(mail: String): String {
+        return Base64.encodeToString(
+            mail.toByteArray(),
+            Base64.NO_WRAP
+        )
+    }
+
     private fun showInAdapter(list: ArrayList<FriendList>) {
         if (isFragmentAttached) {
             val context = requireContext()
             binding.recyclerView5.layoutManager =
                 LinearLayoutManager(context)
-            adapter = FriendListAdapter(
-                list
-            )
+            adapter = FriendListAdapter(list)
             binding.recyclerView5.adapter = adapter
         }
     }
