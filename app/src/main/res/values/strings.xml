@@ -40,4 +40,12 @@
     <string name="verify_you_email">Verify you Email</string>
     <string name="login2">Login</string>
     <string name="fab_button">fab_button</string>
+    <string name="enter_email_of_whom_you_want_to_invite">Enter email of whom you want to invite</string>
+    <string name="invite">Invite</string>
+    <string name="your_invites">Your Invites:</string>
+    <string name="family_and_friends">Family and Friends</string>
+    <string name="pic">TODO</string>
+    <string name="image">image</string>
+    <string name="acc">acc</string>
+    <string name="deny">deny</string>
 </resources>
