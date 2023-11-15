@@ -12,7 +12,7 @@ import com.example.chitchat.R
 import com.example.chitchat.models.FriendList
 import com.google.firebase.auth.FirebaseAuth
 
-class FriendListAdapter(
+class FriendListAdapter (
     private val mList: List<FriendList>
 ) :
     RecyclerView.Adapter<FriendListAdapter.ViewHolder>() {

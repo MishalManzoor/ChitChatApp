@@ -12,7 +12,7 @@ import com.example.chitchat.R
 import com.example.chitchat.models.FriendList
 import com.google.firebase.auth.FirebaseAuth
 
-class ShowChatAdapter(
+class ShowChatAdapter (
     private val mList: List<FriendList>,
     private val onActionClick: OnActionClick
 ) :

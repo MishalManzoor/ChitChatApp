@@ -18,7 +18,7 @@ import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ChatAdapter(
+class ChatAdapter (
     private var c: Context,
     private var mList: List<Message>,
     private var rId: String,

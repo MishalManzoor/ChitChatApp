@@ -10,7 +10,7 @@ import com.example.chitchat.R
 import com.example.chitchat.models.Invite
 import com.google.firebase.auth.FirebaseAuth
 
-class InviteAdapter(private var mList : List<Invite>,
+class InviteAdapter (private var mList : List<Invite>,
                     private val onActionClick: OnActionClick,
 )
     : RecyclerView.Adapter<InviteAdapter.ViewHolder>() {
